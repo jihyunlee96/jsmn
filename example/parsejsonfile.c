@@ -3,7 +3,6 @@
 #include <string.h>
 #include "../jsmn.h"
 #include "../jsmn.c"
-#include "JSON_STRING.txt"
 
 /*
  * A small example of jsmn parsing when JSON structure is known and number of
