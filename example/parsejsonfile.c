@@ -9,7 +9,7 @@
  * tokens is predictable.
  */
 
-char * readjsonfile(const char * filename)
+const char * readjsonfile(const char * filename)
 {
 	char input[500]; // can read up to 500 characters at a time
 	char *result;
@@ -35,7 +35,28 @@ char * readjsonfile(const char * filename)
 	return result;
 }
 
-static int jsoneq(char *json, jsmntok_t *tok, char *s) {
+void printall(const char *json, jsmntok_t *t, int tokcount)
+{
+	printf("***** All Tokens *****");
+
+	for (int i = 1; i < tokcount; i ++ ) {
+		char t_type[20];
+		if (t[i]->type == 1)
+			t_type = "JSMN_OBJECT";
+		else if (t[i]->type == 2)
+			t_type = "JSMN_ARRAY"; 
+		else if (t[i]->type == 3)
+			t_type = "JSMN_STRING";
+		else if (t[i]->type == 4)
+			t_type = "JSMN_PRIMITIVE";
+		else
+			t_type = "UNDEFINED";
+		
+		printf("[%3d] %s (size=%d, %d~%d, %s)", i, json + t[i]->start, t[i]->size, t[i]->start, t[i]->end, t_type); 
+	}
+}
+
+static int jsoneq(const char *json, jsmntok_t *tok, char *s) {
 	if (tok->type == JSMN_STRING && (int) strlen(s) == tok->end - tok->start &&
 			strncmp(json + tok->start, s, tok->end - tok->start) == 0) {
 		return 0;
@@ -49,7 +70,7 @@ int main() {
 	jsmn_parser p;
 	jsmntok_t t[128]; /* We expect no more than 128 tokens */
 	
-	char *JSON_STRING = readjsonfile("data.json");
+	const char *JSON_STRING = readjsonfile("data.json");
 
 	printf("Initial JSON String:\n%s\n\n", JSON_STRING);
 
@@ -95,10 +116,6 @@ int main() {
 			}
 			i += t[i+1].size + 1;
 		} else { /* Managing unexpected keys (Must be in key / value pair) */
-
-			// Make sure the first letter of key is capital
-			if('a' < *(JSON_STRING + t[i].start) && *(JSON_STRING + t[i].start) < 'z')
-				*(JSON_STRING + t[i].start) -= 32;
 
 			// Print key with its value
 			printf("- %.*s:", t[i].end-t[i].start,
