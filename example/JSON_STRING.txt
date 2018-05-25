@@ -1,0 +1,1 @@
+{"user": "JLEE", "admin": true, "uid": 1000, "password": 1234, "class": "kkim's OSS", "groups": ["users", "wheel", "audio", "video"]}
