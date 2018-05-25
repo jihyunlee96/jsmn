@@ -11,7 +11,7 @@
 
 char * readjsonfile(const char * filename)
 {
-	char input[200]; // can read up to 200 characters at a time
+	char input[500]; // can read up to 500 characters at a time
 	char *result;
 	
 	FILE *fp;
@@ -49,7 +49,7 @@ int main() {
 	jsmn_parser p;
 	jsmntok_t t[128]; /* We expect no more than 128 tokens */
 	
-	char *JSON_STRING = readjsonfile("JSON_STRING.txt");
+	char *JSON_STRING = readjsonfile("data.json");
 
 	printf("Initial JSON String:\n%s\n\n", JSON_STRING);
 
