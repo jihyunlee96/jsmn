@@ -27,10 +27,6 @@ char * readjsonfile()
 		fgets(input, sizeof(input), fp);
 		result = (char *) realloc(result, sizeof(result) + sizeof(input));
 		strcat(result, input);
-
-		
-
-		printf("\n");
 	}
 	
 	result[strlen(result)] = '\0';
