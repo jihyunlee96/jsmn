@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../jsmn.h"
-#include "../jsmn.c"
+#include "jsmn.h"
 
 /*
  * A small example of jsmn parsing when JSON structure is known and number of
@@ -26,10 +25,11 @@ char * readjsonfile()
 	// second ~ nth allocation
 	while(!feof(fp)) {
 		fgets(input, sizeof(input), fp);
-		result = (char *) realloc(result, strlen(input));
-		strncpy(result + strlen(result), input, strlen(input));
+		result = (char *) realloc(result, sizeof(result) + sizeof(input));
+		strcat(result, input);
 
-		puts(input);
+		
+
 		printf("\n");
 	}
 	
