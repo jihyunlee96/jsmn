@@ -9,13 +9,13 @@
  * tokens is predictable.
  */
 
-char * readjsonfile()
+char * readjsonfile(const char * filename)
 {
 	char input[200]; // can read up to 200 characters at a time
 	char *result;
 	
 	FILE *fp;
-	fp = fopen("JSON_STRING.txt", "rt");
+	fp = fopen(filename, "rt");
 
 	// first allocation
 	fgets(input, sizeof(input), fp);
@@ -49,7 +49,7 @@ int main() {
 	jsmn_parser p;
 	jsmntok_t t[128]; /* We expect no more than 128 tokens */
 	
-	char *JSON_STRING = readjsonfile();
+	char *JSON_STRING = readjsonfile("JSON_STRING.txt");
 
 	printf("Initial JSON String:\n%s\n\n", JSON_STRING);
 
