@@ -74,6 +74,51 @@ void printall(const char *json, jsmntok_t *t, int tokcount)
 	printf("\n");
 }
 
+void printkeys(const char *json, jsmntok_t *t, int tokcount)
+{
+	int i;
+	int count = 1;
+
+	printf("***** All Keys *****\n");
+
+	for (i = 1; i < tokcount; i ++ ) {
+		char * type = malloc(20 * sizeof(char));
+		int j, k;
+
+		if(t[i].size == 0)
+			continue;
+		else if(t[i].type != 3)
+			continue;
+
+		if (t[i].type == 1)
+			type = "JSMN_OBJECT";
+		else if (t[i].type == 2)
+			type = "JSMN_ARRAY";
+		else if (t[i].type == 3)
+			type = "JSMN_STRING";
+		else if (t[i].type == 4)
+			type = "JSMN_PRIMITIVE";
+		else
+			type = "UNDEFINED";
+
+		// We expect the contents of one token is less then 200 chars
+		char * subString = (char *) malloc(200*sizeof(char));
+		// Initialize subString
+		for(j = 0; j < 200; j ++)
+			subString[j] = '\0';
+		
+		for(j = t[i].start; j < t[i].end; j ++) 
+			subString[j - t[i].start] = json[j];
+
+		subString[j] = '\0';
+
+		printf("[%2d] %s (%d)\n", count++, subString, i); 
+		
+		free(subString);
+	}
+	printf("\n");
+}
+
 static int jsoneq(const char *json, jsmntok_t *tok, char *s) {
 	if (tok->type == JSMN_STRING && (int) strlen(s) == tok->end - tok->start &&
 			strncmp(json + tok->start, s, tok->end - tok->start) == 0) {
@@ -101,6 +146,8 @@ int main() {
 	
 	printall(JSON_STRING, t, r);
 
+	printkeys(JSON_STRING, t, r);
+	
 	/* Assume the top-level element is an object */
 	if (r < 1 || t[0].type != JSMN_OBJECT) {
 		printf("Object expected\n");
