@@ -37,23 +37,41 @@ const char * readjsonfile(const char * filename)
 
 void printall(const char *json, jsmntok_t *t, int tokcount)
 {
-	printf("***** All Tokens *****");
+	int i;
 
-	for (int i = 1; i < tokcount; i ++ ) {
-		char t_type[20];
-		if (t[i]->type == 1)
-			t_type = "JSMN_OBJECT";
-		else if (t[i]->type == 2)
-			t_type = "JSMN_ARRAY"; 
-		else if (t[i]->type == 3)
-			t_type = "JSMN_STRING";
-		else if (t[i]->type == 4)
-			t_type = "JSMN_PRIMITIVE";
+	printf("***** All Tokens *****\n");
+
+	for (i = 1; i < tokcount; i ++ ) {
+		char * type = malloc(20 * sizeof(char));
+		int j, k;
+
+		if (t[i].type == 1)
+			type = "JSMN_OBJECT";
+		else if (t[i].type == 2)
+			type = "JSMN_ARRAY";
+		else if (t[i].type == 3)
+			type = "JSMN_STRING";
+		else if (t[i].type == 4)
+			type = "JSMN_PRIMITIVE";
 		else
-			t_type = "UNDEFINED";
+			type = "UNDEFINED";
+
+		// We expect the contents of one token is less then 200 chars
+		char * subString = (char *) malloc(200*sizeof(char));
+		// Initialize subString
+		for(j = 0; j < 200; j ++)
+			subString[j] = '\0';
 		
-		printf("[%3d] %s (size=%d, %d~%d, %s)", i, json + t[i]->start, t[i]->size, t[i]->start, t[i]->end, t_type); 
+		for(j = t[i].start; j < t[i].end; j ++) 
+			subString[j - t[i].start] = json[j];
+
+		subString[j] = '\0';
+
+		printf("[%2d] %s (size=%d, %d~%d, %s)\n", i, subString, t[i].size, t[i].start, t[i].end, type); 
+		
+		free(subString);
 	}
+	printf("\n");
 }
 
 static int jsoneq(const char *json, jsmntok_t *tok, char *s) {
@@ -80,6 +98,8 @@ int main() {
 		printf("Failed to parse JSON: %d\n", r);
 		return 1;
 	}
+	
+	printall(JSON_STRING, t, r);
 
 	/* Assume the top-level element is an object */
 	if (r < 1 || t[0].type != JSMN_OBJECT) {
