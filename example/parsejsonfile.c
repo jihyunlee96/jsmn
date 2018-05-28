@@ -4,12 +4,17 @@
 #include "../jsmn.h"
 #include "../jsmn.c"
 
+#define TRUE 1
+#define FALSE 0
+
+int keycount;
+
 /*
  * A small example of jsmn parsing when JSON structure is known and number of
  * tokens is predictable.
  */
 
-const char * readjsonfile(const char * filename)
+char * readjsonfile(const char * filename)
 {
 	char input[500]; // can read up to 500 characters at a time
 	char *result;
@@ -119,7 +124,50 @@ void printkeys(const char *json, jsmntok_t *t, int tokcount)
 	printf("\n");
 }
 
-static int jsoneq(const char *json, jsmntok_t *tok, char *s) {
+int findkeys(const char *json, jsmntok_t *t, int tokcount, int *keys)
+{
+	int i;
+	int count = 0;
+
+	for (i = 1; i < tokcount; i ++ ) {
+		if(t[i].size == 0)
+			continue;
+		else if(t[i].type != 3)
+			continue;
+
+		keys[count++] = i;
+	}
+	return count;
+}
+
+void printvalues(const char *json, jsmntok_t *t, int tokcount, int *keys) {
+	int i, j;
+	int isKey;
+
+	printf("***** Print values ******\n");
+
+	for (i = 1; i < tokcount; i++) {
+		isKey = FALSE;
+		for(j = 0; j < keycount; j++) {
+
+			if(i == keys[j]) {
+				isKey = TRUE;
+				break;
+			}
+		}
+
+		if(isKey == TRUE) {
+			printf("- %.*s: ", t[i].end-t[i].start,
+					json + t[i].start);
+		}
+		else {
+			printf("%.*s\n", t[i].end-t[i].start,
+					json + t[i].start);
+		}
+	}
+}
+
+static int jsoneq(char *json, jsmntok_t *tok, char *s) {
 	if (tok->type == JSMN_STRING && (int) strlen(s) == tok->end - tok->start &&
 			strncmp(json + tok->start, s, tok->end - tok->start) == 0) {
 		return 0;
@@ -133,7 +181,7 @@ int main() {
 	jsmn_parser p;
 	jsmntok_t t[128]; /* We expect no more than 128 tokens */
 	
-	const char *JSON_STRING = readjsonfile("data.json");
+	char *JSON_STRING = readjsonfile("data.json");
 
 	printf("Initial JSON String:\n%s\n\n", JSON_STRING);
 
@@ -143,54 +191,15 @@ int main() {
 		printf("Failed to parse JSON: %d\n", r);
 		return 1;
 	}
-	
+
 	printall(JSON_STRING, t, r);
 
 	printkeys(JSON_STRING, t, r);
-	
-	/* Assume the top-level element is an object */
-	if (r < 1 || t[0].type != JSMN_OBJECT) {
-		printf("Object expected\n");
-		return 1;
-	}
 
-	/* Loop over all keys of the root object */
-	for (i = 1; i < r; i++) {
-		if (jsoneq(JSON_STRING, &t[i], "user") == 0) {
-			/* We may use strndup() to fetch string value */
-			printf("- User: %.*s\n", t[i+1].end-t[i+1].start,
-					JSON_STRING + t[i+1].start);
-			i++;
-		} else if (jsoneq(JSON_STRING, &t[i], "admin") == 0) {
-			/* We may additionally check if the value is either "true" or "false" */
-			printf("- Admin: %.*s\n", t[i+1].end-t[i+1].start,
-					JSON_STRING + t[i+1].start);
-			i++;
-		} else if (jsoneq(JSON_STRING, &t[i], "uid") == 0) {
-			/* We may want to do strtol() here to get numeric value */
-			printf("- UID: %.*s\n", t[i+1].end-t[i+1].start,
-					JSON_STRING + t[i+1].start);
-			i++;
-		} else if (jsoneq(JSON_STRING, &t[i], "groups") == 0) {
-			int j;
-			printf("- Groups:\n");
-			if (t[i+1].type != JSMN_ARRAY) {
-				continue; /* We expect groups to be an array of strings */
-			}
-			for (j = 0; j < t[i+1].size; j++) {
-				jsmntok_t *g = &t[i+j+2];
-				printf("  * %.*s\n", g->end - g->start, JSON_STRING + g->start);
-			}
-			i += t[i+1].size + 1;
-		} else { /* Managing unexpected keys (Must be in key / value pair) */
+	int keyarray[100];
+	keycount = findkeys(JSON_STRING, t, r, keyarray);
 
-			// Print key with its value
-			printf("- %.*s:", t[i].end-t[i].start,
-					JSON_STRING + t[i].start);
-			printf(" %.*s\n", t[i+1].end-t[i+1].start,
-					JSON_STRING + t[i+1].start);
-			i ++;
-		}
-	}
+	printvalues(JSON_STRING, t, r, keyarray);
+
 	return EXIT_SUCCESS;
 }
