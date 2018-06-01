@@ -1,0 +1,53 @@
+{
+	"Menu":
+	[
+		{
+			"name": "Vegetable Egg Rolls",
+			"size": "4 pcs",
+			"price": 3950
+		},
+		{
+			"name": "Deep Fried Tofu",
+			"size": "4 pcs",
+			"price": 4950
+		},
+		{
+			"name": "Popcorn Chicken",
+			"size": "12 pcs",
+			"price": 6950
+		},
+		{
+			"name": "Seaweed Salad",
+			"size": "1 bowl",
+			"price": 3500
+		}
+	],
+		"Meal":
+	[
+		{
+			"name": "Vegetable Fried Rice",
+			"size": "1 bowl",
+			"price": 8950
+		},
+		{
+			"name": "BBQ Pork Fried Rice",
+			"size": "1 bowl",
+			"price": 9950
+		},
+		{
+			"name": "Seafood Crispy Noodle",
+			"size": "1 bowl",
+			"price": 10950
+		},
+		{
+			"name": "Pineapple Shrimp Fried Rice",
+			"size": "1 bowl",
+			"price": 12950
+		},
+		{
+			"name": "Mixed Vegetable Crispy Noodle",
+			"size": "1 bowl",
+			"price": 10950
+		}
+	]
+}
