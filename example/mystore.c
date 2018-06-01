@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../jsmn.h"
+#include "../jsmn.c"
 
 #define TRUE 1
 #define FALSE 0
@@ -143,7 +144,7 @@ void printincome(mymenu_t *m[])
 	int menu;
 	int order;
 	int total_income = 0;
-	int menu_income[8] = {0};
+	int menu_income[9] = {0};
 	
 	FILE *file;
 	file = fopen("receipts.txt", "rt");
@@ -167,6 +168,7 @@ void printincome(mymenu_t *m[])
 	printf("- 6. BBQ Pork Fried Rice: %d\n", menu_income[5]);
 	printf("- 7. Seafood Crispy Noodle Bowl: %d\n", menu_income[6]);
 	printf("- 8. Pineapple Shrimpt Fried Bowl: %d\n", menu_income[7]);
+	printf("- 9. Mixed Vegetable Crispy Noodle: %d\n", menu_income[8]);
 }
 
 int main() {
@@ -191,7 +193,7 @@ int main() {
 
 	printmenu(mymenu, menucount);
 
-	printincome(mymenu, menucount);
+	printincome(mymenu);
 
 	return EXIT_SUCCESS;
 }
