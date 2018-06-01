@@ -138,6 +138,37 @@ void printmenu(mymenu_t *m[], int mcount)
 	}
 }
 
+void printincome(mymenu_t *m[])
+{
+	int menu;
+	int order;
+	int total_income = 0;
+	int menu_income[8] = {0};
+	
+	FILE *file;
+	file = fopen("receipts.txt", "rt");
+
+	while(!feof(file)) {
+		fscanf(file, " %d ", &menu);
+		fscanf(file, " %d", &order);
+
+		total_income += m[menu-1]->price * order;
+		menu_income[menu-1] += m[menu-1]->price * order;
+	}
+	
+	printf("\n\n*** Print Income *****\n");
+	printf("Total income: %d\n", total_income);
+	printf("Income per menu:\n");
+	printf("- 1. Vegetable Egg Rolls: %d\n", menu_income[0]);
+	printf("- 2. Deep Fried Tofu: %d\n", menu_income[1]);
+	printf("- 3. Popcorn Chicken: %d\n", menu_income[2]);
+	printf("- 4. Seaweed Salad: %d\n", menu_income[3]);
+	printf("- 5. Vegetable Fried Rice bowl: %d\n", menu_income[4]);
+	printf("- 6. BBQ Pork Fried Rice: %d\n", menu_income[5]);
+	printf("- 7. Seafood Crispy Noodle Bowl: %d\n", menu_income[6]);
+	printf("- 8. Pineapple Shrimpt Fried Bowl: %d\n", menu_income[7]);
+}
+
 int main() {
 	int i;
 	int r;
