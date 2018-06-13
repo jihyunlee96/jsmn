@@ -1,0 +1,36 @@
+{
+	"cars" : [
+		{
+			"model" : "Sonata",
+			"maker" : "Hyundai",
+			"year" : 2016,
+			"gas" : "gasoline"
+		},
+		{
+			"model" : "Cooper",
+			"maker" : "BMW",
+			"year" : 1969,
+			"gas" : "gasoline"
+		},
+		{
+			"model" : "Tesla 3",
+			"maker" : "Tesla",
+			"year" : 2017,
+			"gas" : "electricity"
+		},
+		{
+			"model" : "Range",
+			"maker" : "LR",
+			"year" : 1970,
+			"gas" : "gasoline"
+		},
+		{
+			"model" : "Land",
+			"maker" : "LR",
+			"year" : 2009,
+			"gas" : "gasoline"
+		}
+	]
+}
+
+
