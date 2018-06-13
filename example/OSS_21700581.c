@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "jsmn.h"
+#include "../jsmn.h"
+#include "../jsmn.c"
 
 /*
  * A small example of jsmn parsing when JSON structure is known and number of
@@ -123,7 +124,7 @@ void printcarlist(car_t * list[], int carcount)
 	// 저장된 구조체 배열을 알맞게 출력
 	printf("번호	모델명	제조사	제조년도	연료타입\n");
 	for(i = 0; i < carcount; i ++) {
-		printf("%d	%s	%s	%d	%s\n", i+1, list[i]->model, list[i]->maker, list[i]->year, list[i]->gastype);
+		printf("%d	%s	%s	%d		%s\n", i+1, list[i]->model, list[i]->maker, list[i]->year, list[i]->gastype);
 	}
 }
 

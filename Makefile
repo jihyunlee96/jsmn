@@ -37,6 +37,8 @@ jsondump: example/jsondump.o libjsmn.a
 parsejsonfile: example/parsejsonfile.o libjsmn.a
 	$(CC) $(LDFLAGS) $^ -o $@
 
+OSS_21700581: example/OSS_21700581.o libjsmn.a
+	$(CC) $(LDFLAGS) $^ -o $@
 clean:
 	rm -f *.o example/*.o
 	rm -f *.a *.so
